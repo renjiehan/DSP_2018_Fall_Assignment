@@ -74,7 +74,7 @@ void beta_cal(HMM *hmm, char* sample, int sample_num)
 
     // Observation second last to 1 (beginning)
     for(int obs_idx=len-2; obs_idx>-1; obs_idx--) {
-        data = sample[obs_idx] - 'A';
+        data = sample[obs_idx+1] - 'A';
 
         for(int i=0; i< hmm->state_num; i++) { // go through observation
             int obs_postidx = obs_idx +1;
@@ -156,10 +156,10 @@ void epsilon_cal(HMM *hmm, char* sample, int sample_num)
     }
 }
 
-void update_param(HMM* hmm, int state_total)
+void update_param(HMM* hmm, int sample_total)
 {
     for(int st=0; st<hmm->state_num; st++){
-        hmm->initial[st] = updated_initial[st] / state_total;
+        hmm->initial[st] = updated_initial[st] / sample_total;
     }
 
     for(int st=0; st<hmm->state_num; st++) {
@@ -168,7 +168,7 @@ void update_param(HMM* hmm, int state_total)
         }
     }
 
-    for(int observ=0; observ<hmm->state_num; observ++) {
+    for(int observ=0; observ<hmm->observ_num; observ++) {
         for(int st=0; st<hmm->state_num; st++) {
             hmm->observation[observ][st] = accu_obs_gamma[observ][st] / accu_gamma[st];
         }
@@ -202,9 +202,6 @@ void train(int iter_time, HMM *hmm, FILE *training_data)
     int sample_num;
     char sample[MAX_LINE];
 
-    // int number_of_state = HMM_model->state_num;
-    // int number_of_observation = HMM_model->observ_num;
-
     for (int i = 0; i < iter_time; i++)
     {
         fseek(training_data, 0, SEEK_SET);
@@ -212,7 +209,6 @@ void train(int iter_time, HMM *hmm, FILE *training_data)
         for (sample_num = 0; fscanf(training_data, "%s", sample) > 0; sample_num++)
         {
             train_one_sample(hmm, sample, sample_num);
-            // printf("end\n");
         }
         update_param(hmm, sample_num);
     }
