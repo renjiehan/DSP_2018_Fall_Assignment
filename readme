@@ -1,0 +1,12 @@
+Description:
+To discriminate chinese digit (.wav). Assignment description written in PDF file.
+
+To solve this assignment, HKT is required.
+
+
+After applying Gaussian mixture, iterate 20 times instead of 5 times to get new mean and standard deviation.
+
+Then I increase state number from 5 to 13(edit lib/proto), the accuracy exceed 96% by now.
+
+At last, revise MU parameter in lib/mix2_10.hed from 2 to 6 (MU of silence from 3 to 6).
+By now, the accuracy is 97.58%.
